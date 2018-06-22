@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>编译原理教学演示系统</title>
+	<link rel="shortcut icon" href="./favicon.ico">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./css/syntax_LR0.css">
+
+</head>
+
+<body>
+	<header id='topBar'>
+		<h1 class="topBar-title">
+			编译原理动态演示系统
+		</h1>
+	</header>
+	<div class="container" id='container'>
+		<nav class='sideBar-full'>
+			<div class="sideBar-hint">
+				<span class="glyphicon glyphicon-hand-down"></span>
+				<span>请选择一个实现</span>
+			</div>
+
+			<div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="词法分析">
+				<span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+				<span class="sideBar-title-content">词法分析</span>
+			</div>
+			<ul class="sideBar-group">
+				<li class="sideBar-item" data-toggle="tooltip">
+					<a href="./lexical-analysis.html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> NFA—DFA-minDFA</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="语法分析">
+				<span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+				<span class="sideBar-title-content">语法分析</span>
+			</div>
+			<ul class="sideBar-group">
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LL(1).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LL（1） </span>
+					</a>
+				</li>
+				<li class="sideBar-item high-light">
+					<a href="./syntax-analysis_LR(0).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LR（0） </span>
+					</a>
+				</li>
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LR(1).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LR（1） </span>
+					</a>
+				</li>
+			</ul>
+
+
+			<div class="input-container">
+				<div class="input-source">
+					<p>请输入上下文无关文法：</p>
+					<textarea id="input-grammar" autofocus></textarea>
+					<button class="btn btn-primary">提交</button>
+				</div>
+				<div class="input-source">
+					<p>请输入句子：</p>
+					<input id="input-sentence" type="text">
+					<button class="btn btn-primary">运行</button>
+				</div>
+			</div>
+
+		</nav>
+
+
+
+		<div class="result">
+
+			<div id="about" class="about">
+				<img src="./images/LR0.png" alt="LL1语法分析过程">
+				<p>上下文无关文法输入示例：</p>
+				<span>E</span>
+				<br>
+				<span>E->aA</span>
+				<br>
+				<span>E->bB</span>
+				<br>
+				<span>A->cA</span>
+				<br>
+				<span>A->d</span>
+				<br>
+				<span>B->cB</span>
+				<br>
+				<span>B->d</span>
+				<br>
+			</div>
+
+			<div class="loader">
+				<span>Rendering ...</span>
+			</div>
+			<p>扩展文法</p>
+			<div id="result-grammer">
+
+			</div>
+			<p>LR0自动机</p>
+			<div id="result-dfa">
+
+			</div>
+			<p>语法分析表</p>
+			<div id="result-parsetable">
+
+			</div>
+			<p>分析步骤</p>
+			<div id="result-verifytable">
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script src="./js/viz-lite.js"></script>
+	<script src="./js/LR0/LR0.js"></script>
+	<script src="./js/LR0/praser.js"></script>
+	<script src="./js/LR0/controller.js"></script>
+
+	<script>
+
+		document.querySelectorAll(".input-source button")[0].addEventListener("click", function () {
+			document.querySelector(".result").className = 'result rendering';
+
+			setTimeout(() => {
+				console.time("Noworker");
+				praseGrammar();
+				console.timeEnd("Noworker");				
+			}, 10);
+
+			setTimeout(() => {
+				document.getElementById("about").style.display = 'none';
+				document.querySelector(".result").className = 'result';
+			}, 10);
+		});
+
+		document.querySelectorAll(".input-source button")[1].addEventListener("click", function () {
+			praseSentence();
+		});
+	</script>
+</body>
+
+</html>

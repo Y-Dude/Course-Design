@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>编译原理教学演示系统</title>
+  <link rel="shortcut icon" href="./favicon.ico">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/lexical.css">
+  <script src="./js/viz-lite.js"></script>
+
+  <style>
+    #collection-container {
+      overflow-x: scroll;
+    }
+
+    section h3 {
+      color: #f09b22;
+    }
+  </style>
+</head>
+
+<body>
+  <header id='topBar'>
+    <h1 class="topBar-title">
+      编译原理动态演示系统
+    </h1>
+  </header>
+  <div class="container" id='container'>
+    <nav class='sideBar-full'>
+      <div class="sideBar-hint">
+        <span class="glyphicon glyphicon-hand-down"></span>
+        <span>请选择一个实现</span>
+      </div>
+
+      <div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="词法分析">
+        <span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+        <span class="sideBar-title-content">词法分析</span>
+      </div>
+      <ul class="sideBar-group">
+        <li class="sideBar-item" data-toggle="tooltip">
+          <a href="./lexical-analysis.html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> NFA—DFA-minDFA</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="语法分析">
+        <span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+        <span class="sideBar-title-content">语法分析</span>
+      </div>
+      <ul class="sideBar-group">
+        <li class="sideBar-item">
+          <a href="./syntax-analysis_LL(1).html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> LL（1） </span>
+          </a>
+        </li>
+        <li class="sideBar-item">
+          <a href="./syntax-analysis_LR(0).html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> LR（0） </span>
+          </a>
+        </li>
+        <li class="sideBar-item high-light">
+          <a href="./syntax-analysis_LR(1).html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> LR（1） </span>
+          </a>
+        </li>
+      </ul>
+
+
+      <div class="input-container">
+        <div class="input-source">
+          <p>请输入上下文无关文法：</p>
+          <textarea id="grammar-text" autofocus></textarea>
+          <button id="create-parser" class="btn btn-primary">提交</button>
+        </div>
+        <div class="input-source">
+          <p>请输入句子：</p>
+          <input id="input-text" type="text">
+          <button id="parse" class="btn btn-primary">运行</button>
+          <button id="clear" class="btn btn-primary">清除</button>
+        </div>
+      </div>
+
+    </nav>
+
+  </div>
+
+  <div id="main">
+    <div id="result" class="result">
+      <div class="loader">
+        <span>Rendering ...</span>
+      </div>
+      <div class="about">
+        <img src="./images/LR1.png" alt="词法分析流程图">
+        <ol>
+          <p>如何输入文法:</p>
+          <li>第一个符号为开始符号</li>
+          <li>空格分割每个符号</li>
+          <li>每条规则一行</li>
+          <li>不需要输入终结符</li>
+        </ol>
+      </div>
+
+      <!-- result -->
+      <section>
+        <h3>增广文法</h3>
+        <div id="grammar-container"></div>
+      </section>
+      <section>
+        <h3>文法的GOTO图</h3>
+        <div id="collection-container"></div>
+      </section>
+      <section>
+        <h3>语法分析表</h3>
+        <div id="parse-table-container"></div>
+      </section>
+      <section>
+        <h3>分析步骤</h3>
+        <div id="parse-steps-container"></div>
+      </section>
+    </div>
+  </div>
+
+
+  <script src="./js/LR1/Lr1ParserVis.js"></script>
+  <script src="./js/LR1/index.js"></script>
+
+</body>
+
+</html>

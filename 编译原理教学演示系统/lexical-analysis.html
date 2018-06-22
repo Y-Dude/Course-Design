@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>编译原理教学演示系统</title>
+  <link rel="shortcut icon" href="./favicon.ico">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/lexical.css">
+
+</head>
+
+<body>
+  <header id='topBar'>
+    <h1 class="topBar-title">
+      编译原理动态演示系统
+    </h1>
+  </header>
+  <div class="container" id='container'>
+    <nav class='sideBar-full'>
+      <div class="sideBar-hint">
+        <span class="glyphicon glyphicon-hand-down"></span>
+        <span>请选择一个实现</span>
+      </div>
+
+      <div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="词法分析">
+        <span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+        <span class="sideBar-title-content">词法分析</span>
+      </div>
+      <ul class="sideBar-group">
+        <li class="sideBar-item high-light" data-toggle="tooltip">
+          <a href="./lexical-analysis.html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> NFA—DFA-minDFA</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="语法分析">
+        <span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+        <span class="sideBar-title-content">语法分析</span>
+      </div>
+      <ul class="sideBar-group">
+        <li class="sideBar-item">
+          <a href="./syntax-analysis_LL(1).html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> LL（1） </span>
+          </a>
+        </li>
+        <li class="sideBar-item">
+          <a href="./syntax-analysis_LR(0).html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> LR（0） </span>
+          </a>
+        </li>
+        <li class="sideBar-item">
+          <a href="./syntax-analysis_LR(1).html" class="sideBar-item-a">
+            <div class="sideBar-icon">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </div>
+            <span> LR（1） </span>
+          </a>
+        </li>
+      </ul>
+
+
+      <div class="input-container">
+        <div class="input-source">
+          <textarea id="expression" autofocus placeholder="请再次输入正确的正规式"></textarea>
+        </div>
+        <div class="input-source">
+          <input id="verifyStr" type="text" placeholder="输入验证串,默认输入aaa">
+        </div>
+        <div class="input-run">
+          <button id="verifyStrBtn" class="btn btn-primary">验证</button>
+        </div>
+        <div id="tips" class="tips">
+          请输入验证串！
+        </div>
+      </div>
+
+    </nav>
+
+  </div>
+
+  <div id="main">
+    <div id="result" class="result">
+      <div class="loader">
+        <span>Rendering ...</span>
+      </div>
+      <div class="about">
+        <img src="./images/lexical-analysis.png" alt="词法分析流程图">
+        <p>
+          输入一个正规式 (RegExp)
+          <br> 示例 "01*|00(10)*|01", "abc*|ac*b"
+        </p>
+        <p>
+          1.将RegExp转换为NFA
+        </p>
+        <p>
+          2.将 NFA 转换为DFA
+        </p>
+        <p>3.将 DFA 转换为最小化DFA</p>
+      </div>
+      <div class="item">
+        <div class="title">NFA(Nondeterministic Finite Automata)</div>
+        <div class="picture" id="result-nfa"></div>
+      </div>
+      <div class="item">
+        <div class="title">DFA(Deterministic Finite Automata)</div>
+        <div class="picture" id="result-dfa"></div>
+      </div>
+      <div class="item">
+        <div class="title">minDFA(Minimal Deterministic Finite Automata)</div>
+        <div class="picture" id="result-min"></div>
+      </div>
+      <div class="item">
+        <div class="title">状态转化表</div>
+        <div class="trans-table" id="trans-table"></div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <script src="./js/lexical-analysis/verify-input.js"></script>
+  <script>
+    + function () {
+      function createWorker() {
+        var worker = new Worker('./js/lexical-analysis/worker.js');
+        worker.onerror = function (e) {
+          console.log(e);
+        }
+        worker.onmessage = function (e) {
+          console.timeEnd("workerTime");
+          let minDfa = e.data.min;
+          console.log(e);
+
+          document.getElementById("verifyStrBtn").onclick = function () {
+            verify(minDfa);
+          };
+          workerBusy = false;
+          document.getElementById('result').className = 'result';
+          if (e.data.status) {
+            document.getElementById('result-nfa').innerHTML = e.data.dot[0];
+            document.getElementById('result-dfa').innerHTML = e.data.dot[1];
+            document.getElementById('result-min').innerHTML = e.data.dot[2];
+
+            document.querySelector('.about').className = 'about off';
+            setTimeout(function () {
+              document.querySelector('.about').style.display = 'none';
+            }, 500);
+          } else {
+            alert("failed to render diagram");
+          }
+        }
+        return worker;
+      }
+
+      var workerBusy = true;
+      var currentWorker = undefined;
+
+      document.getElementById('expression').oninput = function (e) {
+        console.time("workerTime");        
+        var str = e.target.value.replace(/\s/g, '');
+        if (str) {
+          if (workerBusy) {
+            currentWorker && currentWorker.terminate();
+            // Worker 接口中的 terminate()  方法用于立即终止 Worker 的行为. 本方法并不会等待 worker 去完成它剩余的操作；worker 将会被立刻停止
+            currentWorker = createWorker();
+          }
+          currentWorker.postMessage(str);
+          document.getElementById('result').className = 'result rendering';
+        }
+      }
+    }();
+  </script>
+  <script src="./js/viz-lite.js" defer></script>
+
+</body>
+
+</html>

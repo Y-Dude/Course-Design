@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>编译原理教学演示系统</title>
+	<link rel="shortcut icon" href="./favicon.ico">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/animate.min.css">
+	<link rel="stylesheet" href="./css/main.css">
+
+	<style>
+		#main {
+			width: 100%;
+			height: 100%;
+			padding-top: 50px;
+			padding-left: 180px;
+			text-align: center;
+			font-size: 50px;
+			color: #f09b22;
+		}
+		#main span{
+			display: inline-block;
+			transform: translateY(200px);
+		}
+	</style>
+
+	<script>
+		var SOURCE = '默认内容';
+	</script>
+</head>
+
+<body>
+	<header id='topBar'>
+		<h1 class="topBar-title">
+			编译原理动态演示系统
+		</h1>
+	</header>
+	<div class="container" id='container'>
+		<nav class='sideBar-full'>
+			<div class="sideBar-hint">
+				<span class="glyphicon glyphicon-hand-down"></span>
+				<span>请选择一个实现</span>
+			</div>
+
+			<div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="词法分析">
+				<span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+				<span class="sideBar-title-content">词法分析</span>
+			</div>
+			<ul class="sideBar-group">
+				<li class="sideBar-item" data-toggle="tooltip">
+					<a href="./lexical-analysis.html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> NFA—DFA-minDFA</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="语法分析">
+				<span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+				<span class="sideBar-title-content">语法分析</span>
+			</div>
+			<ul class="sideBar-group">
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LL(1).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LL（1） </span>
+					</a>
+				</li>
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LR(0).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LR（0） </span>
+					</a>
+				</li>
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LR(1).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LR（1） </span>
+					</a>
+				</li>
+			</ul>
+
+		</nav>
+
+
+
+
+	</div>
+
+	<div id="main">
+		<span>欢迎使用编译原理演示系统</span>
+	</div>
+
+
+</body>
+
+</html>

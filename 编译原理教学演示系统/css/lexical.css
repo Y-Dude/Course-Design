@@ -1,0 +1,130 @@
+#main {
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+    padding-left: 180px;
+    text-align: center;
+    background: #eef;
+}
+
+.result {
+    padding-top: 40px;
+    position: relative;
+}
+
+.about {
+    opacity: 1;
+    pointer-events: all;
+    position: absolute;
+    z-index: 30;
+    width: 100%;
+    min-height: 100%;
+    background: #eef;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 200;
+}
+
+.about p {
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.about.off {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.result .item {
+    background: #fff;
+    margin: 15px 0;
+    box-shadow: 0 0 10px 1px rgba(10, 10, 10, 0.1);
+}
+
+.result .title {
+    font-family: 'Cinzel', sans-serif;
+    font-size: 20px;
+    letter-spacing: -2.5px;
+    line-height: 35px;
+    border-bottom: dotted 1px #ccc;
+    text-shadow: 0 0 2px rgba(10, 10, 10, 0.4);
+    color: #f09b22;
+}
+
+.result .picture {
+    padding: 25px 20px;
+    max-height: 80vh;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.result.rendering {
+    opacity: 0.5;
+}
+
+.result .loader {
+    top: 0;
+    position: fixed;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: all ease 400ms;
+    background: rgba(220, 180, 160, 0.5);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: stretch;
+    flex-direction: column;
+    font-size: 55px;
+    font-weight: 100;
+}
+
+.result.rendering .loader {
+    opacity: 1;
+}
+
+svg {
+    display: inline-block;
+}
+
+
+table{
+    margin: 0 auto;
+    min-width: 700px;
+}
+tr>th {
+    border: 3px solid white;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    background-color: #323232;
+    color: #fff;
+    font-weight: bold;
+}
+
+tr>td {
+    border: 3px solid white;
+    padding: 5px;
+    text-align: center;
+    background-color: #EEE;
+    color: #888;
+}
+
+@media only screen and (min-width: 768px) {
+    .about {
+        font-size: 30px;
+        line-height: 60px;
+    }
+    .about a {
+        line-height: 20px;
+        font-size: 35px;
+    }
+    .result .title {
+        font-size: 25px;
+        line-height: 45px;
+    }
+    .result .picture {
+        padding: 40px 40px;
+    }
+}

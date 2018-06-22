@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>编译原理教学演示系统</title>
+	<link rel="shortcut icon" href="./favicon.ico">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./css/syntax_LL1.css">
+</head>
+
+<body>
+	<header id='topBar'>
+		<h1 class="topBar-title">
+			编译原理动态演示系统
+		</h1>
+	</header>
+
+	<div class="container" id='container'>
+
+		<nav class='sideBar-full'>
+			<div class="sideBar-hint">
+				<span class="glyphicon glyphicon-hand-down"></span>
+				<span>请选择一个实现</span>
+			</div>
+
+			<div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="词法分析">
+				<span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+				<span class="sideBar-title-content">词法分析</span>
+			</div>
+			<ul class="sideBar-group">
+				<li class="sideBar-item" data-toggle="tooltip">
+					<a href="./lexical-analysis.html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> NFA—DFA-minDFA</span>
+					</a>
+				</li>
+			</ul>
+
+			<div class="sideBar-title" data-toggle="tooltip" data-placement="right" title="语法分析">
+				<span class="glyphicon glyphicon-arrow-down sideBar-icon"></span>
+				<span class="sideBar-title-content">语法分析</span>
+			</div>
+			<ul class="sideBar-group">
+				<li class="sideBar-item high-light">
+					<a href="./syntax-analysis_LL(1).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LL（1） </span>
+					</a>
+				</li>
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LR(0).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LR（0） </span>
+					</a>
+				</li>
+				<li class="sideBar-item">
+					<a href="./syntax-analysis_LR(1).html" class="sideBar-item-a">
+						<div class="sideBar-icon">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</div>
+						<span> LR（1） </span>
+					</a>
+				</li>
+			</ul>
+
+
+			<div class="input-container">
+				<div class="input-source">
+					<p>请输入上下文无关文法：</p>
+					<textarea id="myCfg" autofocus>S->TR
+R->+TR|ε
+T->FY
+Y->*FY|ε
+F->(S)|i</textarea>
+				</div>
+				<div class="input-source">
+					<p>输入验证串：</p>
+					<input id="verifyStr" type="text" value="i*i+i">
+				</div>
+				<div class="input-run">
+					<button id="myCfgBtn" class="btn btn-primary">运行</button>
+				</div>
+			</div>
+
+		</nav>
+
+	</div>
+
+	<div id="main">
+
+		<div class="other-box">
+			<div class="colum-first">
+				<div id="cfg">
+
+				</div>
+				<div id="first">
+
+				</div>
+				<div id="follow">
+
+				</div>
+			</div>
+			<div id="ll1table">
+				<h3>预测分析表</h3>
+			</div>
+		</div>
+
+		<div id="verifytable">
+			<h3>分析步骤</h3>
+
+		</div>
+
+
+
+		<div id="loader" class="loader">
+			<img src="./images/LL1.png" alt="LL1语法分析过程">
+			<p>上下文无关文法输入示例：</p>
+			<span>S->TR</span>
+			<br>
+			<span>R->+TR|ε</span>
+			<br>
+			<span>T->FY</span>
+			<br>
+			<span>Y->*FY|ε</span>
+			<br>
+			<span>F->(S)|i</span>
+			<br>
+			<p>开始符号为：S</p>
+			<p>结束符号为：ε</p>
+		</div>
+	</div>
+
+	<!-- <div class="control">
+		<span>Controls:</span>
+		<button class="btn btn-success btn-sm">NEXT</button>
+		<button class="btn btn-warning btn-sm">BACK</button>
+		<button class="btn btn-danger btn-sm">FINISH</button>
+	</div> -->
+
+
+
+
+	<script src="./js/LL1/LL1.js"></script>
+	<script src="./js/LL1/template.js"></script>
+	<script>
+		function getById(id) {
+			return document.getElementById(id);
+		}
+		function arrEmpty(arr) {
+			for (let value of arr) {
+				value.innerHTML = '';
+			}
+		}
+		function arrAppend(arr, tempArr) {
+			arr.forEach((ele, index) => {
+				ele.innerHTML = tempArr[index];
+			});
+		}
+		let myCfgBtn = getById('myCfgBtn');
+
+		let cfgBox = getById('cfg');
+		let firstBox = getById('first');
+		let followBox = getById('follow');
+		let ll1tableBox = getById('ll1table');
+		let verifytableBox = getById('verifytable');
+
+		var result;
+
+
+		myCfgBtn.onclick = () => {
+			getById('loader').className = 'result';
+			arrEmpty([cfgBox, firstBox, followBox, ll1tableBox, verifytableBox]);
+			result = null;
+			let myCfg = document.getElementById('myCfg').value;
+			let verifyStr = document.getElementById('verifyStr').value;
+
+			let unformattedP;
+			let input;
+			unformattedP = myCfg ? new Set(myCfg.split('\n')) : new Set(['S->TA', 'A->+TA|ε', 'T->FB', 'B->*FB|ε', 'F->i|(S)']);
+			input = verifyStr ? verifyStr : 'i+i*i';
+			console.log("input:");
+			console.log(input);
+			console.log("unformattedP:");
+			console.log(unformattedP);
+			let error;
+			let hasLCF;
+			let hasLRecursion;
+			let Vn;
+			let Vt;
+			let P;
+			let Vn2null;
+			let FIRST;
+			let FOLLOW;
+			let SELECT;
+			let isLL1;
+			let LL1AnalysisTable;
+			let isSentence;
+			let inputAnalysisTable;
+			try {
+				result = ({
+					hasLCF,
+					hasLRecursion,
+					Vn,
+					Vt,
+					P,
+					Vn2null,
+					FIRST,
+					FOLLOW,
+					SELECT,
+					isLL1,
+					LL1AnalysisTable,
+					isSentence,
+					inputAnalysisTable,
+				} = LL1(unformattedP, input));
+				cfgTemp = cfgTemplate([...unformattedP]);
+				firstTemp = firstFollowTemplate(FIRST, 'FIRST');
+				followTemp = firstFollowTemplate(FOLLOW, 'FOLLOW');
+				ll1ATalbeTemp = ll1AnalysisTemplate(LL1AnalysisTable);
+				verifyATableTemp = verifyAnalysisTemplate(inputAnalysisTable);
+				arrAppend([cfgBox, firstBox, followBox, ll1tableBox, verifytableBox], [cfgTemp, firstTemp, followTemp, ll1ATalbeTemp, verifyATableTemp]);
+
+				// getById('loader').className = 'loader';
+				console.log(result);
+			} catch (err) {
+				console.log("err:" + err)
+				// TODO: 错误处理
+				if (!err.message.includes('无法识别') && !err.message.includes('进制转换溢出')) {
+					error = '请提交规范代码！';
+					console.log(error);
+				} else {
+					error = err.message;
+					console.log(error);
+				}
+			}
+
+		}
+
+	</script>
+
+</body>
+
+</html>
